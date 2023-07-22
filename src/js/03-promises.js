@@ -7,9 +7,6 @@ function onFormSubmit(evt) {
   evt.preventDefault();
 
   const { delay, step, amount } = evt.currentTarget.elements;
-  // console.log(
-  //   `delay: ${delay.value}, step: ${step.value}, amount: ${amount.value}`
-  // );
 
   let inputDelay = Number(delay.value);
   const inputStep = Number(step.value);
