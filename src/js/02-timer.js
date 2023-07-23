@@ -19,34 +19,40 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    // виклик щоразу під час закриття елемента інтерфейсу
-    console.log(selectedDates[0]);
 
-    if (selectedDates[0] < new Date()) {
-      refs.start.disabled = true;
+  onClose(selectedDates) {
+    const selectedTime = selectedDates[0];
+
+    if (selectedTime <= Date.now()) {
       Notiflix.Notify.failure('Please choose a date in the future!');
-      return;
-    }
-    if (selectedDates[0] > new Date()) {
+      refs.start.disabled = true;
+    } else {
       refs.start.disabled = false;
     }
-
-    refs.start.addEventListener('click', () => {
-      intervalId = setInterval(() => {
-        const deltaTime = selectedDates[0] - new Date();
-
-        if (updateClockFace < 1000) {
-          clearInterval(intervalId);
-        }
-        const result = convertMs(deltaTime);
-        updateClockFace(result);
-      }, 1000);
-    });
   },
 };
-
 flatpickr('#datetime-picker', options);
+
+refs.start.addEventListener('click', onStartTimer);
+
+function onStartTimer() {
+  refs.start.disabled = true;
+  setTheInterval();
+}
+function setTheInterval() {
+  intervalId = setInterval(() => {
+    const choosenDate = new Date(refs.input.value);
+    const deltaTime = choosenDate - Date.now();
+
+    if (deltaTime < 0) {
+      clearInterval(intervalId);
+      refs.input.disabled = false;
+      return Notiflix.Notify.success('Time is up');
+    }
+    const result = convertMs(deltaTime);
+    updateClockFace(result);
+  }, 1000);
+}
 
 function updateClockFace({ days, hours, minutes, seconds }) {
   refs.days.textContent = `${days}`;

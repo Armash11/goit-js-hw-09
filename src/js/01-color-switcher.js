@@ -10,14 +10,19 @@ const colorChanger = {
       return;
     }
     this.isActive = true;
+
     this.intervalId = setInterval(() => {
       bodyColor.style.backgroundColor = getRandomHexColor();
-      console.log(bodyColor);
     }, 1000);
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
   },
   stop() {
     clearInterval(this.intervalId);
     this.isActive = false;
+    stopBtn.disabled = true;
+    startBtn.disabled = false;
   },
 };
 
